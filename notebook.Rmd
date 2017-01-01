@@ -39,4 +39,3 @@ cor.test(popValues, unemploymentValues, use = "complete.obs")
 ```{r}
 plot(x=popValues, y=unemploymentValues)
 ```
-
