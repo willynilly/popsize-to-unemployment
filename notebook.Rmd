@@ -1,0 +1,42 @@
+---
+title: "Country Unemployment Rate vs Population Size Notebook"
+output: html_notebook
+---
+
+
+```{r}
+
+rm(list=ls())
+
+library(readr)
+library(dplyr)
+library(reshape2)
+
+countryData = read_csv("./data/b3f75470-1239-4afb-9776-eaae430ca232_Data.csv")
+popSeriesCode = "SP.POP.TOTL"
+popData = filter(countryData, `Series Code` == popSeriesCode)
+
+unemploymentSeriesCode = "SL.UEM.TOTL.NE.ZS"
+unemploymentData = filter(countryData, `Series Code` == unemploymentSeriesCode)
+countryNames = unique(countryData$`Country Name`)
+
+seriesVars = c('1990 [YR1990]', '2000 [YR2000]', '2007 [YR2007]', '2008 [YR2008]', '2009 [YR2009]', '2010 [YR2010]', '2011 [YR2011]', '2012 [YR2012]', '2013 [YR2013]', '2014 [YR2014]', '2015 [YR2015]')
+stackedPop = melt(popData, id.vars=c('Country Name'), measure.vars=seriesVars, value.name='v')
+stackedUnemployment = melt(unemploymentData, id.vars=c('Country Name'), measure.vars=seriesVars, value.name='v')
+
+popValues = as.numeric(stackedPop$v)
+unemploymentValues = as.numeric(stackedUnemployment$v)
+
+```
+
+
+```{r}
+cor.test(popValues, unemploymentValues, use = "complete.obs")
+
+```
+
+
+```{r}
+plot(x=popValues, y=unemploymentValues)
+```
+
